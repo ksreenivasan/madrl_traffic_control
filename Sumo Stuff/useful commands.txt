@@ -1,0 +1,10 @@
+# useful commands
+
+# to create the network
+netconvert --node-files=hello.nod.xml --edge-files=hello.edg.xml --output-file=hello.net.xml
+
+# to run sim in command line mode
+sumo -c hello.sumocfg
+
+# to run sim in gui
+sumo-gui -c hello.sumocfg
