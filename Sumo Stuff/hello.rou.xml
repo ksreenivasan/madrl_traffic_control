@@ -1,0 +1,31 @@
+<routes>
+    <vType accel="0.5" decel="5.0" id="Car" length="5.0" maxSpeed="100.0" sigma="0.0" />
+    
+    <route id="route0" edges="left-right-1 left-right-2"/>
+
+<!-- this specifies individual vehicles -->
+<!--     <vehicle id="veh0" type="Car" depart="1" route="route0" color="1,0,0" />
+    <vehicle id="veh1" type="Car" depart="5" route="route0" color="0,1,0" />
+    <vehicle id="veh2" type="Car" depart="10" route="route0" color="0,0,1" /> -->
+
+	<!-- defines a flow with probabilistic releases. low p => poisson -->
+    <flow id="type1" color="1,1,0"  begin="0" end= "1000" probability="0.1" type="Car">
+	    <route edges="left-right-1 left-right-2"/>
+	</flow>
+
+	<!-- defines a flow with probabilistic releases. low p => poisson -->
+    <flow id="type2" color="1,0,0"  begin="0" end= "1000" probability="0.1" type="Car">
+	    <route edges="up-down-1 up-down-2"/>
+	</flow>
+
+	<!-- defines a flow with probabilistic releases. low p => poisson -->
+    <flow id="type3" color="0,0,1"  begin="0" end= "1000" probability="0.1" type="Car">
+	    <route edges="right-left-1 right-left-2"/>
+	</flow>
+
+	<!-- defines a flow with probabilistic releases. low p => poisson -->
+    <flow id="type4" color="0,1,1"  begin="0" end= "1000" probability="0.1" type="Car">
+	    <route edges="down-up-1 down-up-2"/>
+	</flow>
+
+</routes>

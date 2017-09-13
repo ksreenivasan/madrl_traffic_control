@@ -1,0 +1,6 @@
+<additional>
+<e1Detector id="0" lane="left-right-1_0" pos="80" freq="30" file="hello.out" friendlyPos="x"/>
+<e1Detector id="1" lane="left-right-1_1" pos="80" freq="30" file="hello.out" friendlyPos="x"/>
+<e1Detector id="2" lane="left-right-1_2" pos="80" freq="30" file="hello.out" friendlyPos="x"/>
+<e1Detector id="3" lane="left-right-1_3" pos="80" freq="30" file="hello.out" friendlyPos="x"/>
+</additional>

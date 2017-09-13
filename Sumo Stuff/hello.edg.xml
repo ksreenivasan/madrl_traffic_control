@@ -1,0 +1,13 @@
+<edges>
+    <edge id="left-right-1" from="1" to="2" />
+    <edge id="left-right-2" from="2" to="3" />
+
+    <edge id="right-left-1" from="3" to="2" />
+    <edge id="right-left-2" from="2" to="1" />
+
+    <edge id="up-down-1" from="4" to="2" />
+    <edge id="up-down-2" from="2" to="5" />
+
+    <edge id="down-up-1" from="5" to="2" />
+    <edge id="down-up-2" from="2" to="4" />
+</edges>
