@@ -126,9 +126,9 @@ def run():
             append_data.append(di)
             # print ("Appended data =",append_data)
         step += 1
-    append_data
     # append_data = pd.concat(append_data,axis=1)
-    # print (append_data)
+    print (append_data)
+    print (len(append_data))
     print ("number of time steps = ",step)
     traci.close()
     sys.stdout.flush()
