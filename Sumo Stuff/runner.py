@@ -109,12 +109,13 @@ Waiting_Time_dict = defaultdict(list)
 
 import pandas as pd
 
-Waiting_Time = pd.DataFrame()
+
 
  # numpy.zeros(shape=(names_incoming_lanes.size,))
-print (Waiting_Time)
 
 def run():
+    Waiting_Time = pd.DataFrame()
+    append_data = []
     """execute the TraCI control loop"""
     step = 0
     Total_Waiting_Time = 0
@@ -122,9 +123,12 @@ def run():
         traci.simulationStep()
         for i in names_incoming_lanes:
             di = pd.DataFrame({i : traci.lane.getWaitingTime(i)},index=[step])
-            Waiting_Time.append(di,ignore_index = True)
+            append_data.append(di)
+            # print ("Appended data =",append_data)
         step += 1
-    print (Waiting_Time)
+    append_data
+    # append_data = pd.concat(append_data,axis=1)
+    # print (append_data)
     print ("number of time steps = ",step)
     traci.close()
     sys.stdout.flush()
