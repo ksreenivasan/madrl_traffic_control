@@ -102,7 +102,7 @@ def get_waiting_time(flag):
         Max_Value_2 = traci.lane.getWaitingTime("left-right-1_2")
         Max_Value_3 = traci.lane.getWaitingTime("left-right-1_3")
         Max_Value_10 = traci.lane.getWaitingTime("right-left-1_0")
-        Max_Value_11 = traci.lane.getWaitingTime("right-left-1_1") 
+        Max_Value_11 = traci.lane.getWaitingTime("right-left-1_1")
         Max_Value_12 = traci.lane.getWaitingTime("right-left-1_2")
         Max_Value_13 = traci.lane.getWaitingTime("right-left-1_3")
         print("Max_Value_13 = ", Max_Value_0)
@@ -121,43 +121,57 @@ def get_waiting_time(flag):
     print (Max_Value_Lane_lr)
 
 
+names_incoming_lanes = ["left-right-1_0","left-right-1_1",
+"left-right-1_2","left-right-1_3","right-left-1_0",
+"right-left-1_1","right-left-1_2","right-left-1_3",
+"up-down-1_0","up-down-1_1","up-down-1_2","up-down-1_3",
+"down-up-1_0","down-up-1_1","down-up-1_2","down-up-1_3"]
+
+Waiting_Time_dict = {}.fromkeys(names_incoming_lanes, 0)
+
+
 def run():
     """execute the TraCI control loop"""
     step = 0
-    Max_Value_Lane_lr = []
+    Total_Waiting_Time = 0
+    # Defining an empty dictionary
+
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        if traci.trafficlights.getPhase("2") == 0:
-            Max_Value_lr_0 = traci.lane.getWaitingTime("left-right-1_0")
-            print (Max_Value_lr_0)
-            Max_Value_lr_1 = traci.lane.getWaitingTime("left-right-1_1")
-            Max_Value_lr_2 = traci.lane.getWaitingTime("left-right-1_2")
-            Max_Value_lr_3 = traci.lane.getWaitingTime("left-right-1_3")
-            Max_Value_10 = traci.lane.getWaitingTime("right-left-1_0")
-            Max_Value_11 = traci.lane.getWaitingTime("right-left-1_1") 
-            Max_Value_12 = traci.lane.getWaitingTime("right-left-1_2")
-            Max_Value_13 = traci.lane.getWaitingTime("right-left-1_3")
-            flag = 1
-        if traci.trafficlights.getPhase("2") == 2:
-            if flag == 1:
-                print (Max_Value_0,Max_Value_1,Max_Value_2,
-                    Max_Value_3,Max_Value_10,Max_Value_11,Max_Value_12,
-                    Max_Value_13)
-                Max = mean([Max_Value_0,Max_Value_1,Max_Value_2,
-                    Max_Value_3,Max_Value_10,Max_Value_11,Max_Value_12,
-                    Max_Value_13])
-                Max_Value_Lane_lr.append(Max)
-                flag = 0
-            Max_Value_0 = traci.lane.getWaitingTime("up-down-1_0")
-            Max_Value_1 = traci.lane.getWaitingTime("up-down-1_1")
-            Max_Value_2 = traci.lane.getWaitingTime("up-down-1_2")
-            Max_Value_3 = traci.lane.getWaitingTime("up-down-1_3")
-            Max_Value_10 = traci.lane.getWaitingTime("down-up-1_0")
-            Max_Value_11 = traci.lane.getWaitingTime("down-up-1_1") 
-            Max_Value_12 = traci.lane.getWaitingTime("down-up-1_2")
-            Max_Value_13 = traci.lane.getWaitingTime("down-up-1_3")
+        for i in names_incoming_lanes:
+            Waiting_Time_dict[i] += traci.lane.getWaitingTime(i)
+            # Total_Waiting_Time += traci.lane.getWaitingTime(i)
+        # if traci.trafficlights.getPhase("2") == 0:
+        #     Max_Value_lr_0 = traci.lane.getWaitingTime("left-right-1_0")
+        #     print (Max_Value_lr_0)
+        #     Max_Value_lr_1 = traci.lane.getWaitingTime("left-right-1_1")
+        #     Max_Value_lr_2 = traci.lane.getWaitingTime("left-right-1_2")
+        #     Max_Value_lr_3 = traci.lane.getWaitingTime("left-right-1_3")
+        #     Max_Value_10 = traci.lane.getWaitingTime("right-left-1_0")
+        #     Max_Value_11 = traci.lane.getWaitingTime("right-left-1_1")
+        #     Max_Value_12 = traci.lane.getWaitingTime("right-left-1_2")
+        #     Max_Value_13 = traci.lane.getWaitingTime("right-left-1_3")
+        #     flag = 1
+        # if traci.trafficlights.getPhase("2") == 2:
+        #     if flag == 1:
+        #         print (Max_Value_0,Max_Value_1,Max_Value_2,
+        #             Max_Value_3,Max_Value_10,Max_Value_11,Max_Value_12,
+        #             Max_Value_13)
+        #         Max = mean([Max_Value_0,Max_Value_1,Max_Value_2,
+        #             Max_Value_3,Max_Value_10,Max_Value_11,Max_Value_12,
+        #             Max_Value_13])
+        #         Max_Value_Lane_lr.append(Max)
+        #         flag = 0
+        #     Max_Value_0 = traci.lane.getWaitingTime("up-down-1_0")
+        #     Max_Value_1 = traci.lane.getWaitingTime("up-down-1_1")
+        #     Max_Value_2 = traci.lane.getWaitingTime("up-down-1_2")
+        #     Max_Value_3 = traci.lane.getWaitingTime("up-down-1_3")
+        #     Max_Value_10 = traci.lane.getWaitingTime("down-up-1_0")
+        #     Max_Value_11 = traci.lane.getWaitingTime("down-up-1_1")
+        #     Max_Value_12 = traci.lane.getWaitingTime("down-up-1_2")
+        #     Max_Value_13 = traci.lane.getWaitingTime("down-up-1_3")
         step += 1
-        print (Max_Value_Lane_lr)
+    print (Waiting_Time_dict)
     traci.close()
     sys.stdout.flush()
 
@@ -187,5 +201,5 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary,"-c", "hello.sumocfg",
-    "--tripinfo-output", "tripinfo.xml","--additional-files","hello.det.xml"])
+    "--tripinfo-output", "tripinfo.xml"])
     run()
