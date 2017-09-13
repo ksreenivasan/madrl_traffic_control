@@ -93,32 +93,8 @@ for the entire iteration of the the session
 def mean(numbers):
     return float(sum(numbers)) / max(len(numbers), 1)
 
-Max_Value_Lane_lr = []
+# Max_Value_Lane_lr = []
 
-def get_waiting_time(flag):
-    if traci.trafficlights.getPhase("2") == 0:
-        Max_Value_0 = traci.lane.getWaitingTime("left-right-1_0")
-        Max_Value_1 = traci.lane.getWaitingTime("left-right-1_1")
-        Max_Value_2 = traci.lane.getWaitingTime("left-right-1_2")
-        Max_Value_3 = traci.lane.getWaitingTime("left-right-1_3")
-        Max_Value_10 = traci.lane.getWaitingTime("right-left-1_0")
-        Max_Value_11 = traci.lane.getWaitingTime("right-left-1_1")
-        Max_Value_12 = traci.lane.getWaitingTime("right-left-1_2")
-        Max_Value_13 = traci.lane.getWaitingTime("right-left-1_3")
-        print("Max_Value_13 = ", Max_Value_0)
-        flag = 1
-    if traci.trafficlights.getPhase("2") == 2:
-        if flag == 1:
-            print (Max_Value_0,Max_Value_1,Max_Value_2,
-                Max_Value_3,Max_Value_10,Max_Value_11,Max_Value_12,
-                Max_Value_13)
-            Max = mean([Max_Value_0,Max_Value_1,Max_Value_2,
-                Max_Value_3,Max_Value_10,Max_Value_11,Max_Value_12,
-                Max_Value_13])
-            Max_Value_Lane_lr.append(Max)
-            flag = 0
-        step += 1
-    print (Max_Value_Lane_lr)
 
 
 names_incoming_lanes = ["left-right-1_0","left-right-1_1",
@@ -130,7 +106,13 @@ names_incoming_lanes = ["left-right-1_0","left-right-1_1",
 Waiting_Time_dict = defaultdict(list)
 Waiting_Time_dict = {}.fromkeys(names_incoming_lanes,[0])
 
-print ("Waiting time = ",Waiting_Time_dict)
+
+import pandas as pd
+
+Waiting_Time = pd.DataFrame(columns = names_incoming_lanes)
+
+ # numpy.zeros(shape=(names_incoming_lanes.size,))
+print (Waiting_Time)
 
 def run():
     """execute the TraCI control loop"""
@@ -143,7 +125,8 @@ def run():
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         for i in names_incoming_lanes:
-            Waiting_Time_dict[i].append(traci.lane.getWaitingTime(i))
+            Waiting_Time.add(traci.lane.getWaitingTime(i),axis=1)
+            # print ("Waiting_Time = ",Waiting_Time[i])
             # Total_Waiting_Time += traci.lane.getWaitingTime(i)
         # if traci.trafficlights.getPhase("2") == 0:
         #     Max_Value_lr_0 = traci.lane.getWaitingTime("left-right-1_0")
@@ -175,7 +158,8 @@ def run():
         #     Max_Value_12 = traci.lane.getWaitingTime("down-up-1_2")
         #     Max_Value_13 = traci.lane.getWaitingTime("down-up-1_3")
         step += 1
-    print (Waiting_Time_dict)
+    print ("Waiting time =", Waiting_Time)
+    print ("number of time steps = ",step)
     traci.close()
     sys.stdout.flush()
 
