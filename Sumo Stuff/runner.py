@@ -27,7 +27,7 @@ import sys
 import optparse
 import subprocess
 import random
-
+from collections import defaultdict
 
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
@@ -127,8 +127,10 @@ names_incoming_lanes = ["left-right-1_0","left-right-1_1",
 "up-down-1_0","up-down-1_1","up-down-1_2","up-down-1_3",
 "down-up-1_0","down-up-1_1","down-up-1_2","down-up-1_3"]
 
-Waiting_Time_dict = {}.fromkeys(names_incoming_lanes, 0)
+Waiting_Time_dict = defaultdict(list)
+Waiting_Time_dict = {}.fromkeys(names_incoming_lanes,[0])
 
+print ("Waiting time = ",Waiting_Time_dict)
 
 def run():
     """execute the TraCI control loop"""
@@ -136,10 +138,12 @@ def run():
     Total_Waiting_Time = 0
     # Defining an empty dictionary
 
+
+
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         for i in names_incoming_lanes:
-            Waiting_Time_dict[i] += traci.lane.getWaitingTime(i)
+            Waiting_Time_dict[i].append(traci.lane.getWaitingTime(i))
             # Total_Waiting_Time += traci.lane.getWaitingTime(i)
         # if traci.trafficlights.getPhase("2") == 0:
         #     Max_Value_lr_0 = traci.lane.getWaitingTime("left-right-1_0")
