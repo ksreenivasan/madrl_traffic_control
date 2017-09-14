@@ -108,18 +108,21 @@ names_incoming_lanes = ["left-right-1_0","left-right-1_1",
 
 
 import pandas as pd
-
+from matplotlib import pyplot as plt
 def Get_Average_Waiting_Timestep(a,b):
     avg_wait = []
     for idx,i in enumerate(a):
         if b[idx] == 0:
             avg_wait.append(0)
         else:
-            print("IDX = ",idx)
             avg_wait.append(a[idx]/b[idx])
     return avg_wait
 
-
+def plotthedata(a):
+    plt.plot(a)
+    plt.ylabel("Average delay per vehicle")
+    plt.xlabel("Time")
+    plt.show()
 
 def run():
     Waiting_Time = pd.DataFrame()
@@ -148,7 +151,7 @@ def run():
     print(type(Sum_Num_Vechicles))
     # print(Sum_Waiting_Time)
     Average_Wait = Get_Average_Waiting_Timestep(Sum_Waiting_Time,Sum_Num_Vechicles)
-    print(Average_Wait)
+    plotthedata(Average_Wait)
     traci.close()
     sys.stdout.flush()
 
