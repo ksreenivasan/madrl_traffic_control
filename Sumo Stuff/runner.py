@@ -21,7 +21,7 @@ the Free Software Foundation; either version 3 of the License, or
 """
 from __future__ import absolute_import
 from __future__ import print_function
-
+from __future__ import division
 import os
 import sys
 import optparse
@@ -109,35 +109,46 @@ names_incoming_lanes = ["left-right-1_0","left-right-1_1",
 
 import pandas as pd
 
+def Get_Average_Waiting_Timestep(a,b):
+    avg_wait = []
+    for idx,i in enumerate(a):
+        if b[idx] == 0:
+            avg_wait.append(0)
+        else:
+            print("IDX = ",idx)
+            avg_wait.append(a[idx]/b[idx])
+    return avg_wait
 
 
- # numpy.zeros(shape=(names_incoming_lanes.size,))
 
 def run():
     Waiting_Time = pd.DataFrame()
     append_data = []
-    """execute the TraCI control loop"""
+    Sum_Waiting_Time = []
+    listoflistwait = []
+    listoflistveh = []
     step = 0
-    listoflist = []
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         list = []
+        num_veh = []
         for idx,i in enumerate(names_incoming_lanes):
             list.append(traci.lane.getWaitingTime(i))
-            # di = pd.DataFrame({i : traci.lane.getWaitingTime(i)},index=[step])
-            # append_data.append(di)
-            # # print ("Appended data =",append_data)
-        # print(list)
-        listoflist.append(list)
+            num_veh.append(traci.lane.getLastStepVehicleNumber(i))
+        listoflistwait.append(list)
+        listoflistveh.append(num_veh)
         step += 1
-    Waiting_Time = pd.DataFrame(listoflist)
-    print(Waiting_Time)
-    # Waiting_Time.append(pd.DataFrame(listoflist, columns=names_incoming_lanes))
-    # print(Waiting_Time)
-    # append_data = pd.concat(append_data,axis=1)
-    # print (append_data)
-    # print (len(append_data))
-    # print ("number of time steps = ",step)
+    Waiting_Time = pd.DataFrame(listoflistwait)
+    Waiting_Time.columns = names_incoming_lanes
+    Num_Vehicles = pd.DataFrame(listoflistveh)
+    Sum_Waiting_Time = Waiting_Time.sum(axis=1)
+    Sum_Waiting_Time.tolist()
+    Sum_Num_Vechicles = Num_Vehicles.sum(axis=1)
+    Sum_Num_Vechicles.tolist()
+    print(type(Sum_Num_Vechicles))
+    # print(Sum_Waiting_Time)
+    Average_Wait = Get_Average_Waiting_Timestep(Sum_Waiting_Time,Sum_Num_Vechicles)
+    print(Average_Wait)
     traci.close()
     sys.stdout.flush()
 
