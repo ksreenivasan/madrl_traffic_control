@@ -103,7 +103,7 @@ names_incoming_lanes = ["left-right-1_0","left-right-1_1",
 "up-down-1_0","up-down-1_1","up-down-1_2","up-down-1_3",
 "down-up-1_0","down-up-1_1","down-up-1_2","down-up-1_3"]
 
-Waiting_Time_dict = defaultdict(list)
+# Waiting_Time_dict = defaultdict(list)
 # Waiting_Time_dict = {}.fromkeys(names_incoming_lanes,[0])
 
 
@@ -118,18 +118,26 @@ def run():
     append_data = []
     """execute the TraCI control loop"""
     step = 0
-    Total_Waiting_Time = 0
+    listoflist = []
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        for i in names_incoming_lanes:
-            di = pd.DataFrame({i : traci.lane.getWaitingTime(i)},index=[step])
-            append_data.append(di)
-            # print ("Appended data =",append_data)
+        list = []
+        for idx,i in enumerate(names_incoming_lanes):
+            list.append(traci.lane.getWaitingTime(i))
+            # di = pd.DataFrame({i : traci.lane.getWaitingTime(i)},index=[step])
+            # append_data.append(di)
+            # # print ("Appended data =",append_data)
+        # print(list)
+        listoflist.append(list)
         step += 1
+    Waiting_Time = pd.DataFrame(listoflist)
+    print(Waiting_Time)
+    # Waiting_Time.append(pd.DataFrame(listoflist, columns=names_incoming_lanes))
+    # print(Waiting_Time)
     # append_data = pd.concat(append_data,axis=1)
-    print (append_data)
-    print (len(append_data))
-    print ("number of time steps = ",step)
+    # print (append_data)
+    # print (len(append_data))
+    # print ("number of time steps = ",step)
     traci.close()
     sys.stdout.flush()
 
