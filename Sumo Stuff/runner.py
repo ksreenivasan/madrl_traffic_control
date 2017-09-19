@@ -143,6 +143,25 @@ def plotthedata(a):
     plt.xlabel("Time")
     plt.show()
 
+def run2():
+    speed = [[]]*len(names_incoming_lanes)
+    step = 0
+    while traci.simulation.getMinExpectedNumber() > 0:
+        traci.simulationStep()
+        if step%3 == 0:
+            for idx,i in enumerate(names_incoming_lanes):
+                count = 0
+                num = 80
+                while num>0:
+                    laneid = idx*100+count
+                    speed[idx].append(traci.inductionloop.getLastStepMeanSpeed(str(laneid)))
+                    num = num-5
+                    count = count + 1
+        for idx,i in enumerate(names_incoming_lanes):
+            print (speed[idx])
+            print ("\n")
+        step += 1
+
 def run():
     Waiting_Time = pd.DataFrame()
     append_data = []
@@ -201,4 +220,4 @@ if __name__ == "__main__":
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary,"-c", "hello.sumocfg",
     "--tripinfo-output", "tripinfo.xml","--additional-files","hello.det.xml"])
-    run()
+    run2()
