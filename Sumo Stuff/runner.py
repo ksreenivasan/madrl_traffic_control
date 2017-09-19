@@ -28,7 +28,7 @@ import optparse
 import subprocess
 import random
 from collections import defaultdict
-
+import csv
 # we need to import python modules from the $SUMO_HOME/tools directory
 try:
     sys.path.append(os.path.join(os.path.dirname(
@@ -58,7 +58,7 @@ def generate_detectorfile():
         for idx, i in enumerate(names_incoming_lanes):
             num = 80
             count = 0
-            while num>0:
+            while num>40:
                 print('<e1Detector id="%d" lane="%s" pos="%d" freq="30" file="hello.out" friendlyPos="x"/>'
                  % (idx*100+count,i,num),file=detectors)
                 num = num-5
@@ -144,23 +144,27 @@ def plotthedata(a):
     plt.show()
 
 def run2():
-    speed = [[]]*len(names_incoming_lanes)
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        if step%3 == 0:
+        if step%5 == 0:
+            speed = [[] for _ in range(len(names_incoming_lanes))]
             for idx,i in enumerate(names_incoming_lanes):
                 count = 0
                 num = 80
-                while num>0:
-                    laneid = idx*100+count
-                    speed[idx].append(traci.inductionloop.getLastStepMeanSpeed(str(laneid)))
+                while num>40:
+                    detectorid = idx*100+count
+                    speed[idx].append(traci.inductionloop.getLastStepMeanSpeed(str(detectorid)))
                     num = num-5
                     count = count + 1
-        for idx,i in enumerate(names_incoming_lanes):
-            print (speed[idx])
-            print ("\n")
+            for idx,i in enumerate(names_incoming_lanes):
+                filename = "/home/newuser/Jayanth/madrl_traffic_control-master/Sumo Stuff/Data/"+i+".csv"
+                with open(filename, 'a') as myfile:
+                    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+                    wr.writerow(speed[idx])
         step += 1
+
+
 
 def run():
     Waiting_Time = pd.DataFrame()
