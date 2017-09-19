@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Thursday 14 September 2017 10:47:31 AM IST by SUMO gui Version 0.30.0
+<!-- generated on Tuesday 19 September 2017 05:32:41 PM IST by SUMO gui Version 0.30.0
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
@@ -8,6 +8,7 @@
     <input>
         <net-file value="hello.net.xml"/>
         <route-files value="hello.rou.xml"/>
+        <additional-files value="hello.det.xml"/>
     </input>
 
     <output>
@@ -16,11 +17,11 @@
 
     <time>
         <begin value="0"/>
-        <end value="10000000"/>
+        <end value="10000"/>
     </time>
 
     <traci_server>
-        <remote-port value="58167"/>
+        <remote-port value="45907"/>
     </traci_server>
 
     <gui_only>
@@ -431,6 +432,4 @@
     <tripinfo id="type1.110" depart="970.00" departLane="left-right-1_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="1056.00" arrivalLane="left-right-2_0" arrivalPos="85.35" arrivalSpeed="11.00" duration="86.00" routeLength="194.90" waitSteps="46" timeLoss="71.19" rerouteNo="0" devices="tripinfo_type1.110" vType="Car" speedFactor="1.00" vaporized=""/>
     <tripinfo id="type3.83" depart="961.00" departLane="right-left-1_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="1056.00" arrivalLane="right-left-2_0" arrivalPos="85.35" arrivalSpeed="11.00" duration="95.00" routeLength="194.90" waitSteps="55" timeLoss="80.19" rerouteNo="0" devices="tripinfo_type3.83" vType="Car" speedFactor="1.00" vaporized=""/>
     <tripinfo id="type3.85" depart="993.00" departLane="right-left-1_0" departPos="5.10" departSpeed="0.00" departDelay="0.00" arrival="1057.00" arrivalLane="right-left-2_0" arrivalPos="85.35" arrivalSpeed="11.00" duration="64.00" routeLength="194.90" waitSteps="25" timeLoss="49.70" rerouteNo="0" devices="tripinfo_type3.85" vType="Car" speedFactor="1.00" vaporized=""/>
-    <tripinfo id="type4.109" depart="1013.00" departLane="down-up-1_0" departPos="5.10" departSpeed="0.00" departDelay="19.00" arrival="1101.00" arrivalLane="down-up-2_1" arrivalPos="85.35" arrivalSpeed="11.00" duration="88.00" routeLength="194.90" waitSteps="48" timeLoss="73.19" rerouteNo="0" devices="tripinfo_type4.109" vType="Car" speedFactor="1.00" vaporized=""/>
-    <tripinfo id="type4.108" depart="1007.00" departLane="down-up-1_0" departPos="5.10" departSpeed="0.00" departDelay="19.00" arrival="1101.00" arrivalLane="down-up-2_0" arrivalPos="85.35" arrivalSpeed="11.00" duration="94.00" routeLength="194.90" waitSteps="54" timeLoss="79.19" rerouteNo="0" devices="tripinfo_type4.108" vType="Car" speedFactor="1.00" vaporized=""/>
-</tripinfos>
+    <tripinfo id="type4.109" depart="1013.00" departLane="down-up-1_0" departPos="5.10" departSpeed="0.00" departDelay="19.00" arrival="1101.00" arrivalLane="down-up-2_1" arrivalPos="85.35" arrivalSpeed="11.00" duration="88.00" routeLength="194.90" waitSteps="48" timeLoss="73.19" rerouteNo="0" devices="tripinfo_type4.109" vType="Car" speedFactor="1.00" vaporized=""

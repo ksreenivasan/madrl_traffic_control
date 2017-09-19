@@ -42,6 +42,29 @@ except ImportError:
 
 import traci
 
+names_incoming_lanes = ["left-right-1_0","left-right-1_1",
+"left-right-1_2","left-right-1_3","right-left-1_0",
+"right-left-1_1","right-left-1_2","right-left-1_3",
+"up-down-1_0","up-down-1_1","up-down-1_2","up-down-1_3",
+"down-up-1_0","down-up-1_1","down-up-1_2","down-up-1_3"]
+
+"""
+Code to place the detectors on the lanes. We pass the entire series of incoming lanes place detectors
+at every 5 meter length gap.
+"""
+def generate_detectorfile():
+    with open("hello.det.xml","w") as detectors:
+        print("""<additional>""",file=detectors)
+        for idx, i in enumerate(names_incoming_lanes):
+            num = 80
+            count = 0
+            while num>0:
+                print('<e1Detector id="%d" lane="%s" pos="%d" freq="30" file="hello.out" friendlyPos="x"/>'
+                 % (idx*100+count,i,num),file=detectors)
+                num = num-5
+                count = count + 1
+        print('</additional>',file=detectors)
+
 def generate_routefile():
     random.seed(42)  # make tests reproducible
     N = 100000  # number of time steps
@@ -97,11 +120,7 @@ def mean(numbers):
 
 
 
-names_incoming_lanes = ["left-right-1_0","left-right-1_1",
-"left-right-1_2","left-right-1_3","right-left-1_0",
-"right-left-1_1","right-left-1_2","right-left-1_3",
-"up-down-1_0","up-down-1_1","up-down-1_2","up-down-1_3",
-"down-up-1_0","down-up-1_1","down-up-1_2","down-up-1_3"]
+
 
 # Waiting_Time_dict = defaultdict(list)
 # Waiting_Time_dict = {}.fromkeys(names_incoming_lanes,[0])
@@ -177,9 +196,9 @@ if __name__ == "__main__":
 
     # first, generate the route file for this simulation
     # generate_routefile()
-
+    generate_detectorfile()
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary,"-c", "hello.sumocfg",
-    "--tripinfo-output", "tripinfo.xml"])
+    "--tripinfo-output", "tripinfo.xml","--additional-files","hello.det.xml"])
     run()
