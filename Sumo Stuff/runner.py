@@ -143,6 +143,23 @@ def plotthedata(a):
     plt.xlabel("Time")
     plt.show()
 
+
+def get_vehicle_info():
+    while traci.simulation.getMinExpectedNumber() > 0:
+        w, h = 200, 200;
+        present = [1]
+        absent = [0]
+        Matrix = [[zip(absent,absent) for x in range(w)] for y in range(h)]
+        for veh_id in traci.vehicle.getIDList():
+            position = traci.vehicle.getPosition(veh_id)
+            speed = traci.vehicle.getSpeed(veh_id)
+            speed = [round(speed,3)]
+            x,y = position
+            x=int(x)
+            y=int(y)
+            Matrix[x][y] = zip(present,speed)
+        traci.simulationStep()
+
 def run2():
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
@@ -224,4 +241,5 @@ if __name__ == "__main__":
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary,"-c", "hello.sumocfg",
     "--tripinfo-output", "tripinfo.xml","--additional-files","hello.det.xml"])
-    run2()
+    # run2()
+    get_vehicle_info()
