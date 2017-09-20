@@ -143,22 +143,34 @@ def plotthedata(a):
     plt.xlabel("Time")
     plt.show()
 
+# import csv
+
+colr = [(0,100),(0,86),(86,100),(86,86)]
+codu = [(100,0),(113,0),(100,86),(113,86)]
+corl = [(200,100),(200,113),(113,100),(113,113)]
+coud = [(86,200)(100,200),(83,113),(100,113)]
 
 def get_vehicle_info():
+    step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
+        traci.simulationStep()
         w, h = 200, 200;
         present = [1]
         absent = [0]
-        Matrix = [[zip(absent,absent) for x in range(w)] for y in range(h)]
-        for veh_id in traci.vehicle.getIDList():
-            position = traci.vehicle.getPosition(veh_id)
-            speed = traci.vehicle.getSpeed(veh_id)
-            speed = [round(speed,3)]
-            x,y = position
-            x=int(x)
-            y=int(y)
-            Matrix[x][y] = zip(present,speed)
-        traci.simulationStep()
+        if step%5 == 0:
+            Matrix = [[zip(absent,absent) for x in range(w)] for y in range(h)]
+            for veh_id in traci.vehicle.getIDList():
+                position = traci.vehicle.getPosition(veh_id)
+                speed = traci.vehicle.getSpeed(veh_id)
+                speed = [round(speed,3)]
+                x,y = position
+                x=int(x)
+                y=int(y)
+                Matrix[x][y] = zip(present,speed)
+            with open("output.csv", "a") as f:
+                writer = csv.writer(f)
+                writer.writerows(Matrix)
+        step += 1
 
 def run2():
     step = 0
@@ -240,6 +252,6 @@ if __name__ == "__main__":
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
     traci.start([sumoBinary,"-c", "hello.sumocfg",
-    "--tripinfo-output", "tripinfo.xml","--additional-files","hello.det.xml"])
+    "--tripinfo-output", "tripinfo.xml"])
     # run2()
     get_vehicle_info()
