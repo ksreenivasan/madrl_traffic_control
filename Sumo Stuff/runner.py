@@ -109,22 +109,6 @@ def generate_routefile():
 #        <phase duration="6"  state="ryry"/>
 #    </tlLogic>
 
-"""
-This calculates the Total delay for every phase and stores it in a list
-for the entire iteration of the the session
-"""
-def mean(numbers):
-    return float(sum(numbers)) / max(len(numbers), 1)
-
-# Max_Value_Lane_lr = []
-
-
-
-
-
-# Waiting_Time_dict = defaultdict(list)
-# Waiting_Time_dict = {}.fromkeys(names_incoming_lanes,[0])
-
 
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -143,22 +127,45 @@ def plotthedata(a):
     plt.xlabel("Time")
     plt.show()
 
-# import csv
-
-colr = [(0,100),(0,86),(86,100),(86,86)]
+colr = [(0,86),(86,86),(0,100),(86,100)]
 codu = [(100,0),(113,0),(100,86),(113,86)]
 corl = [(200,100),(200,113),(113,100),(113,113)]
-coud = [(86,200)(100,200),(83,113),(100,113)]
+coud = [(86,200),(100,200),(86,113),(100,113)]
+
+all_coordinates = [colr,codu,corl,coud]
+
+
+def initialize_matrix():
+    notalane = [-1]
+    w, h = 200, 200;
+    Matrix = [[zip(notalane,notalane) for x in range(w)] for y in range(h)]
+    return Matrix
+
+def extract_lanes(Matrix):
+    lane_values = []
+    count = 0
+    for lane_coordinate in all_coordinates:
+        x = []
+        y = []
+        for ithcordinate in lane_coordinate:
+            x_cord,y_cord = ithcordinate
+            x.append(x_cord)
+            y.append(y_cord)
+            xset = set(x)
+            yset = set(y)
+            xset = sorted(xset)
+            yset = sorted(yset)
+        lane = [row[xset[0]:xset[1]] for row in Matrix[yset[0]:yset[1]]]
+        lane_values.append(lane)
 
 def get_vehicle_info():
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
-        w, h = 200, 200;
         present = [1]
         absent = [0]
         if step%5 == 0:
-            Matrix = [[zip(absent,absent) for x in range(w)] for y in range(h)]
+            Matrix = initialize_matrix()
             for veh_id in traci.vehicle.getIDList():
                 position = traci.vehicle.getPosition(veh_id)
                 speed = traci.vehicle.getSpeed(veh_id)
@@ -167,9 +174,7 @@ def get_vehicle_info():
                 x=int(x)
                 y=int(y)
                 Matrix[x][y] = zip(present,speed)
-            with open("output.csv", "a") as f:
-                writer = csv.writer(f)
-                writer.writerows(Matrix)
+            extract_lanes(Matrix)
         step += 1
 
 def run2():
@@ -248,10 +253,10 @@ if __name__ == "__main__":
 
     # first, generate the route file for this simulation
     # generate_routefile()
-    generate_detectorfile()
+    # generate_detectorfile()
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
-    traci.start([sumoBinary,"-c", "hello.sumocfg",
-    "--tripinfo-output", "tripinfo.xml"])
+    initialize_matrix()
+    traci.start([sumoBinary,"-c", "hello.sumocfg","--tripinfo-output", "tripinfo.xml"])
     # run2()
     get_vehicle_info()
