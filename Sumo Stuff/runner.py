@@ -128,7 +128,7 @@ def plotthedata(a):
     plt.show()
 
 colr = [(0,86),(86,86),(0,100),(86,100)]
-codu = [(100,0),(113,0),(100,86),(113,86)]
+codu = [(100,0),(114,0),(100,86),(114,86)]
 corl = [(200,100),(200,113),(113,100),(113,113)]
 coud = [(86,200),(100,200),(86,113),(100,113)]
 
@@ -155,8 +155,30 @@ def extract_lanes(Matrix):
             yset = set(y)
             xset = sorted(xset)
             yset = sorted(yset)
+        print(xset[0],xset[1],yset[0],yset[1])
         lane = [row[xset[0]:xset[1]] for row in Matrix[yset[0]:yset[1]]]
-        lane_values.append(lane)
+        increment = 3
+        increment_ = 2
+        if count%2 == 0:
+            values = []
+            while increment<len(lane):
+                while increment_<len(lane[increment]):
+                    values.append(lane[increment][increment_])
+                    increment_ = increment_ + 5
+                increment = increment + 3
+            lane_values.append(values)
+            # selecting lanes y values --> lanes
+        else:
+            values = []
+            # selecting lanes x values --> lanes
+            lane = map(list,map(None,*lane))
+            while increment<len(lane):
+                while increment_<len(lane[increment]):
+                    values.append(lane[increment][increment_])
+                    increment_ = increment_ + 5
+                increment = increment + 3
+            lane_values.append(values)
+        print(lane_values)
 
 def get_vehicle_info():
     step = 0
