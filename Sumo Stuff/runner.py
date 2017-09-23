@@ -127,12 +127,45 @@ def plotthedata(a):
     plt.xlabel("Time")
     plt.show()
 
-colr = [(0,86),(86,86),(0,100),(86,100)]
-codu = [(100,0),(114,0),(100,86),(114,86)]
-corl = [(200,100),(200,113),(113,100),(113,113)]
-coud = [(86,200),(100,200),(86,113),(100,113)]
 
-all_coordinates = [colr,codu,corl,coud]
+def get_lane_coordinates():
+    total = []
+    for idx,i in enumerate(names_incoming_lanes):
+        if idx > 0 and idx%4 != 0:
+            lane = []
+            a,b=traci.lane.getShape(names_incoming_lanes[idx-1])
+            c,d=traci.lane.getShape(names_incoming_lanes[idx])
+            ax,ay = a
+            ax = int(ax)
+            ay = int(ay)
+            zippeda = (ax,ay)
+            bx,by = b
+            bx = int(bx)
+            by = int(by)
+            zippedb = (bx,by)
+            cx,cy = c
+            cx = int(cx)
+            cy = int(cy)
+            zippedc = (cx,cy)
+            dx,dy = d
+            dx = int(dx)
+            dy = int(dy)
+            zippedd = (dx,dy)
+            lane.append(zippeda)
+            lane.append(zippedb)
+            lane.append(zippedc)
+            lane.append(zippedd)
+            # print(lane)
+            total.append(lane)
+    print(total)
+    return total
+
+# colr = [(0,86),(86,86),(0,100),(86,100)]
+# # codu = [(100,0),(114,0),(100,86),(114,86)]
+# # corl = [(200,100),(200,113),(113,100),(113,113)]
+# # coud = [(86,200),(100,200),(86,113),(100,113)]
+#
+# all_coordinates = [colr,codu,corl,coud]
 
 
 def initialize_matrix():
@@ -141,53 +174,83 @@ def initialize_matrix():
     Matrix = [[zip(notalane,notalane) for x in range(w)] for y in range(h)]
     return Matrix
 
-def extract_lanes(Matrix):
-    lane_values = []
-    count = 0
-    for lane_coordinate in all_coordinates:
-        x = []
-        y = []
-        for ithcordinate in lane_coordinate:
-            x_cord,y_cord = ithcordinate
-            x.append(x_cord)
-            y.append(y_cord)
-            xset = set(x)
-            yset = set(y)
-            xset = sorted(xset)
-            yset = sorted(yset)
-        print(xset[0],xset[1],yset[0],yset[1])
-        lane = [row[xset[0]:xset[1]] for row in Matrix[yset[0]:yset[1]]]
-        increment = 3
-        increment_ = 2
-        if count%2 == 0:
-            values = []
-            while increment<len(lane):
-                while increment_<len(lane[increment]):
-                    values.append(lane[increment][increment_])
-                    increment_ = increment_ + 5
-                increment = increment + 3
-            lane_values.append(values)
-            # selecting lanes y values --> lanes
-        else:
-            values = []
-            # selecting lanes x values --> lanes
-            lane = map(list,map(None,*lane))
-            while increment<len(lane):
-                while increment_<len(lane[increment]):
-                    values.append(lane[increment][increment_])
-                    increment_ = increment_ + 5
-                increment = increment + 3
-            lane_values.append(values)
-        print(lane_values)
 
-def get_vehicle_info():
+
+def extract_lanes(Matrix,t):
+    count = 0
+    listoflanes = []
+    for lane_coordinate in t:
+        count = count + 1
+        a,b,c,d = lane_coordinate
+        ax,ay = a
+        cx,cy = c
+        bx,by = b
+        if(count<=6):
+            inner = (ay,cy)
+            outer = (ax,bx)
+            inner = sorted(inner)
+            outer = sorted(outer)
+        else:
+            inner = (ax,cx)
+            outer = (ay,by)
+            inner = sorted(inner)
+            outer = sorted(outer)
+        # print(lane_coordinate)
+        lane = [row[outer[0]:outer[1]] for row in Matrix[inner[0]:inner[1]]]
+        listoflanes.append(lane)
+        # choice = int(len(lane)/2)
+        # print(lane)
+    # print("\n\n\n")
+    # print(listoflanes)
+# def extract_lanes(Matrix):
+#     lane_values = []
+#     count = 0
+#     all_coordinates = get_lane_coordinates()
+#     for lane_coordinate in all_coordinates:
+#         print("Lane coordinates = ",lane_coordinate)
+#         x = []
+#         y = []
+#         for ithcordinate in lane_coordinate:
+#             x_cord,y_cord = ithcordinate
+#             x.append(x_cord)
+#             y.append(y_cord)
+#             xset = set(x)
+#             yset = set(y)
+#             xset = sorted(xset)
+#             yset = sorted(yset)
+#         lane = [row[xset[0]:xset[1]] for row in Matrix[yset[0]:yset[1]]]
+#         print(len(lane))
+#         increment = 3
+#         increment_ = 2
+#         if count%2 == 0:
+#             values = []
+#             while increment<len(lane):
+#                 while increment_<len(lane[increment]):
+#                     values.append(lane[increment][increment_])
+#                     increment_ = increment_ + 5
+#                 increment = increment + 3
+#             lane_values.append(values)
+#             # selecting lanes y values --> lanes
+#         else:
+#             values = []
+#             # selecting lanes x values --> lanes
+#             lane = map(list,map(None,*lane))
+#             while increment<len(lane):
+#                 while increment_<len(lane[increment]):
+#                     values.append(lane[increment][increment_])
+#                     increment_ = increment_ + 5
+#                 increment = increment + 3
+#             lane_values.append(values)
+#         # print(lane_values)
+
+def get_vehicle_info(Matrix,t):
     step = 0
     while traci.simulation.getMinExpectedNumber() > 0:
         traci.simulationStep()
         present = [1]
         absent = [0]
-        if step%5 == 0:
-            Matrix = initialize_matrix()
+        if step%2 == 0:
+            # Matrix = initialize_matrix()
             for veh_id in traci.vehicle.getIDList():
                 position = traci.vehicle.getPosition(veh_id)
                 speed = traci.vehicle.getSpeed(veh_id)
@@ -196,7 +259,9 @@ def get_vehicle_info():
                 x=int(x)
                 y=int(y)
                 Matrix[x][y] = zip(present,speed)
-            extract_lanes(Matrix)
+                print(x,y,Matrix[x][y])
+                # print("Position of x ={}, y={} value = {} ".format(x,y,speed))
+            extract_lanes(Matrix,t)
         step += 1
 
 def run2():
@@ -278,7 +343,9 @@ if __name__ == "__main__":
     # generate_detectorfile()
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
-    initialize_matrix()
+    Matrix = initialize_matrix()
     traci.start([sumoBinary,"-c", "hello.sumocfg","--tripinfo-output", "tripinfo.xml"])
+    t = get_lane_coordinates()
+    get_vehicle_info(Matrix,t)
+    # get_lane_coordinates()
     # run2()
-    get_vehicle_info()
