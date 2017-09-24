@@ -157,7 +157,6 @@ def get_lane_coordinates():
             lane.append(zippedd)
             # print(lane)
             total.append(lane)
-    print(total)
     return total
 
 # colr = [(0,86),(86,86),(0,100),(86,100)]
@@ -196,8 +195,17 @@ def extract_lanes(Matrix,t):
             inner = sorted(inner)
             outer = sorted(outer)
         # print(lane_coordinate)
+        # print(xpos[0],ypos[0],Matrix[xpos[0]][ypos[0]])
+        # print(outer[0],outer[1],inner[0],inner[1])
         lane = [row[outer[0]:outer[1]] for row in Matrix[inner[0]:inner[1]]]
+        # print(lane)
+        # prin[ab for x in lane for a in x for (aa,ab) in a if aa == 1])
+
+        # [y for x in lane for (a,b) in x  if a == 1]
+        # print (y)
+        # print (lane)
         listoflanes.append(lane)
+    return listoflanes
         # choice = int(len(lane)/2)
         # print(lane)
     # print("\n\n\n")
@@ -249,19 +257,34 @@ def get_vehicle_info(Matrix,t):
         traci.simulationStep()
         present = [1]
         absent = [0]
+        count = 0
         if step%2 == 0:
             # Matrix = initialize_matrix()
+            xpos = []
+            ypos = []
             for veh_id in traci.vehicle.getIDList():
                 position = traci.vehicle.getPosition(veh_id)
                 speed = traci.vehicle.getSpeed(veh_id)
                 speed = [round(speed,3)]
                 x,y = position
+                count = count + 1
                 x=int(x)
                 y=int(y)
+                if count <4:
+                    xpos.append(x)
+                    ypos.append(y)
                 Matrix[x][y] = zip(present,speed)
-                print(x,y,Matrix[x][y])
+                # print(x,y,Matrix[x][y])
                 # print("Position of x ={}, y={} value = {} ".format(x,y,speed))
-            extract_lanes(Matrix,t)
+
+            data=[('smith, bob',2),('carol',3),('ted',4),('alice',5)]
+            extracted_lanes = extract_lanes(Matrix,t)
+            filename = "/home/newuser/Jayanth/madrl_traffic_control-master/Data/extract_lanes.csv"
+            with open(filename, 'a') as myfile:
+                wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+                wr.writerow(['presence','speed'])
+                for row in extracted_lanes:
+                    wr.writerow(row)
         step += 1
 
 def run2():
@@ -343,9 +366,9 @@ if __name__ == "__main__":
     # generate_detectorfile()
     # this is the normal way of using traci. sumo is started as a
     # subprocess and then the python script connects and runs
-    Matrix = initialize_matrix()
     traci.start([sumoBinary,"-c", "hello.sumocfg","--tripinfo-output", "tripinfo.xml"])
+    Matrix = initialize_matrix()
     t = get_lane_coordinates()
-    get_vehicle_info(Matrix,t)
+    State_Space = get_vehicle_info(Matrix,t)
     # get_lane_coordinates()
     # run2()
