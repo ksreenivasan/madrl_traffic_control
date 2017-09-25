@@ -196,11 +196,6 @@ def extract_lanes(Matrix,t):
             outer = sorted(outer)
         lane = [row[outer[0]:outer[1]] for row in Matrix[inner[0]:inner[1]]]
         # print(len(lane))
-        for idx,i in enumerate(lane):
-            flat_list = [item for sublist in i for item in sublist]
-            lane[idx] = flat_list
-            print(lane[idx])
-            print("lane done \n")
             # print(max(lane[:,2]))
         col = 0
         Max_column = [max(a,key=lambda x:x[1]) for a in zip(*lane)]
@@ -225,8 +220,8 @@ def extract_lanes(Matrix,t):
         # print(lane)
         # print("Lane[0] = {},Lane[len] = {}".format(lane[1:6,0],lane[len(lane)-1]))
         # print(lane[])
-        exit()
-        listoflanes.append(lane)
+        # exit()
+        listoflanes.append(Max_column)
     # print(print()
     return listoflanes
         # choice = int(len(lane)/2)
@@ -302,12 +297,12 @@ def get_vehicle_info(Matrix,t):
 
             data=[('smith, bob',2),('carol',3),('ted',4),('alice',5)]
             extracted_lanes = extract_lanes(Matrix,t)
-            filename = "/home/newuser/Jayanth/madrl_traffic_control-master/Data/extract_lanes.csv"
-            with open(filename, 'a') as myfile:
-                wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-                wr.writerow(['presence','speed'])
-                for row in extracted_lanes:
-                    wr.writerow(row)
+            # filename = "/home/newuser/Jayanth/madrl_traffic_control-master/Data/extract_lanes.csv"
+            # # with open(filename, 'a') as myfile:
+            # #     wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+            # #     wr.writerow(['presence','speed'])
+            # #     for row in extracted_lanes:
+            # #         wr.writerow(row)
         step += 1
 
 def run2():
