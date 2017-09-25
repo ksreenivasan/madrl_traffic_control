@@ -1,6 +1,6 @@
 <routes>
     <vType accel="0.5" decel="5.0" id="Car" length="5.0" maxSpeed="100.0" sigma="0.0" />
-    
+
     <route id="route0" edges="left-right-1 left-right-2"/>
 
 <!-- this specifies individual vehicles -->

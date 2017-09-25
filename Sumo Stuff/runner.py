@@ -194,17 +194,40 @@ def extract_lanes(Matrix,t):
             outer = (ay,by)
             inner = sorted(inner)
             outer = sorted(outer)
-        # print(lane_coordinate)
-        # print(xpos[0],ypos[0],Matrix[xpos[0]][ypos[0]])
-        # print(outer[0],outer[1],inner[0],inner[1])
         lane = [row[outer[0]:outer[1]] for row in Matrix[inner[0]:inner[1]]]
-        # print(lane)
-        # prin[ab for x in lane for a in x for (aa,ab) in a if aa == 1])
+        # print(len(lane))
+        for idx,i in enumerate(lane):
+            flat_list = [item for sublist in i for item in sublist]
+            lane[idx] = flat_list
+            print(lane[idx])
+            print("lane done \n")
+            # print(max(lane[:,2]))
+        col = 0
+        Max_column = [max(a,key=lambda x:x[1]) for a in zip(*lane)]
+        print (Max_column)
+        # maxtuple = ()
+        # while(col<len(lane[0])-1):
+        #     column = []
+        #     for idx,i in enumerate(lane):
+        #         column.append(i[col])
+        #     maximum = -1
+        #     for i in column:
+        #         if(i[1]>max):
+        #             maxtuple = i
+        #     col = col + 1
+        #     Max_column.append(maxtuple)
 
-        # [y for x in lane for (a,b) in x  if a == 1]
-        # print (y)
-        # print (lane)
+        # print(Max_column)
+                # ele = lane[i][]
+                # column.extend()
+        # val_ = [x[0] for i in lane for x in i]
+        # print(max(val_))
+        # print(lane)
+        # print("Lane[0] = {},Lane[len] = {}".format(lane[1:6,0],lane[len(lane)-1]))
+        # print(lane[])
+        exit()
         listoflanes.append(lane)
+    # print(print()
     return listoflanes
         # choice = int(len(lane)/2)
         # print(lane)
