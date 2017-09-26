@@ -157,6 +157,7 @@ def get_lane_coordinates():
             lane.append(zippedd)
             # print(lane)
             total.append(lane)
+    print(len(total))
     return total
 
 # colr = [(0,86),(86,86),(0,100),(86,100)]
@@ -196,10 +197,19 @@ def extract_lanes(Matrix,t):
             outer = sorted(outer)
         lane = [row[outer[0]:outer[1]] for row in Matrix[inner[0]:inner[1]]]
         # print(len(lane))
+        for idx,i in enumerate(lane):
+            flat_list = [item for sublist in i for item in sublist]
+            lane[idx] = flat_list
             # print(max(lane[:,2]))
         col = 0
         Max_column = [max(a,key=lambda x:x[1]) for a in zip(*lane)]
-        print (Max_column)
+        Max_row = [max(Max_column[n:n+5],key=lambda x:x[1]) for n in range(0, len(Max_column), 5)]
+        print(Max_row)
+        # exit()
+        # subList = [max(A[i][n:n+2],key=lambda x:x[1]) for i in range(0,len(A)) for n in range(0, len(A[0]), 2)]
+        # print subList
+        # print (Max_column)
+        listoflanes.append(Max_row)
         # maxtuple = ()
         # while(col<len(lane[0])-1):
         #     column = []
@@ -220,9 +230,10 @@ def extract_lanes(Matrix,t):
         # print(lane)
         # print("Lane[0] = {},Lane[len] = {}".format(lane[1:6,0],lane[len(lane)-1]))
         # print(lane[])
-        # exit()
-        listoflanes.append(Max_column)
+    print (listoflanes)
+    # exit()
     # print(print()
+
     return listoflanes
         # choice = int(len(lane)/2)
         # print(lane)
