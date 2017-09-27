@@ -69,7 +69,7 @@ def adjust_matrix_for_lanes(matrix):
 
 
 # marks cars in the order L -> R
-# TODO: flip?
+# TODO: flip? DONE
 def get_left_right_dtse(x_min, x_max, y):
     vehicle_vel = 0  # default
     vehicle_present = -1  # default
@@ -82,7 +82,7 @@ def get_left_right_dtse(x_min, x_max, y):
         vehicle_vel = traci.vehicle.getSpeed(vehicle_id)
         if x_pos > x_min and x_pos < x_max and y_pos == y:
             # make sure blocks are equally spaced starting from the junction
-            block = (n_blocks -1) - int((x_max - x_pos) / CAR_WIDTH)
+            block = int((x_max - x_pos) / CAR_WIDTH)
             # print x_pos, y_pos, block
             dtse_map[block] = [1, vehicle_vel, vehicle_id]
     return dtse_map
@@ -105,7 +105,7 @@ def get_right_left_dtse(x_min, x_max, y):
     return dtse_map
 
 # marks cars in the order Top -> Bottom
-# TODO: flip?
+# TODO: flip? DONE
 def get_up_down_dtse(y_min, y_max, x):
     vehicle_vel = 0  # default
     vehicle_present = -1  # default
@@ -118,7 +118,7 @@ def get_up_down_dtse(y_min, y_max, x):
         vehicle_vel = traci.vehicle.getSpeed(vehicle_id)
         if y_pos > y_min and y_pos < y_max and x_pos == x:
             # make sure blocks are equally spaced starting from the junction
-            block = (n_blocks - 1) - int((y_pos - y_min) / CAR_WIDTH)
+            block = int((y_pos - y_min) / CAR_WIDTH)
             # print x_pos, y_pos, block
             dtse_map[block] = [1, vehicle_vel, vehicle_id]
     return dtse_map
@@ -178,7 +178,8 @@ def get_dtse_for_junction():
 vehicle_wait_times = defaultdict(lambda: defaultdict(lambda: 0.0))
 min_speed = 0.1
 # call this at every step
-def get_avg_waiting_time():
+# this function uses too much space because of the dict
+def get_avg_waiting_time_v1():
     avg_wait_time = 0.0
     vehicle_ids = traci.vehicle.getIDList()
     for vehicle_id in vehicle_ids:
@@ -198,13 +199,17 @@ def get_avg_waiting_time():
 
 total_waiting_time = 0
 total_moving_time = 0
+# call this at every step
+# TODO: change it to a weighted average
+# total_moving_time = (gamma * total_moving_time) + total_moving_time
 def get_avg_waiting_time():
+    global total_moving_time, total_waiting_time
     vehicle_ids = traci.vehicle.getIDList()
     for vehicle_id in vehicle_ids:
         if traci.vehicle.getSpeed(vehicle_id) < 0.1:
-            total_waiting_time += 1
+            total_waiting_time = total_waiting_time + 1
         else:
-            total_moving_time += 1
+            total_moving_time = total_moving_time + 1
 
     avg_wait_time = total_waiting_time / (total_waiting_time + total_moving_time)
     return avg_wait_time
