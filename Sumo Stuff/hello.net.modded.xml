@@ -1,3 +1,6 @@
+<!-- Use this as an example on how to change phase definition to mimic FST -->
+<!-- Look for tlLogic -->
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- generated on 10/04/17 12:26:49 by SUMO netconvert Version 0.30.0
