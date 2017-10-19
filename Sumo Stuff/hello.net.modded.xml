@@ -152,7 +152,7 @@
         <phase duration="31" state="rrrrGGGGrrrrrrrr"/>
         <phase duration="4" state="rrrryyyyrrrrrrrr"/>
         <phase duration="4" state="rrrrrrrryyyyrrrr"/>
-        <phase duration="6" state="rrrrrrrrGGGGrrrr"/>
+        <phase duration="31" state="rrrrrrrrGGGGrrrr"/>
         <phase duration="4" state="rrrrrrrryyyyrrrr"/>
         <phase duration="4" state="rrrrrrrrrrrryyyy"/>
         <phase duration="31" state="rrrrrrrrrrrrGGGG"/>
